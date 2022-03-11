@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
@@ -11,8 +11,28 @@ const widthContainer = totalWidth * .90;
 
 function Receiver() {
     const transferContext = useContext(TransferContext);
-    const { selectedSender, selectedReceiver } = useContext(TransferContext);
+    const { selectedCategory, selectedSubCategory, selectedSender, receiverBloodBags, selectedReceiver, bloodBagsSent } = useContext(TransferContext);
     let receivers = getCities(transferContext.selectedSender);
+    let addition, recBloodBags, moveBloodBags;
+    useEffect(() => {
+        transferContext.getReceiverBloodBags(selectedCategory, selectedSubCategory, selectedReceiver)
+    }, [selectedReceiver]);
+    useEffect(() => {
+        transferContext.getReceiverBloodBags(selectedCategory, selectedSubCategory, selectedReceiver)
+    }, [selectedCategory]);
+    useEffect(() => {
+        transferContext.getReceiverBloodBags(selectedCategory, selectedSubCategory, selectedReceiver)
+    }, [selectedSubCategory]);
+    useEffect(() => {
+        recBloodBags = receiverBloodBags
+        moveBloodBags = bloodBagsSent
+        addition = recBloodBags - moveBloodBags;
+    }, [bloodBagsSent]);
+
+    recBloodBags = receiverBloodBags
+    moveBloodBags = bloodBagsSent
+    addition = recBloodBags + moveBloodBags;
+
 
     return (
 
@@ -20,28 +40,28 @@ function Receiver() {
             <Text>To</Text>
             <View style={styles.select}>
                 {selectedSender ? (
-                    selectedReceiver === null ? (
+                    <View>
                         <RNPickerSelect
                             useNativeAndroidPickerStyle={false}
                             placeholder={{ label: "City" }}
                             onValueChange={(receiver) => transferContext.selectReceiver(receiver)}
                             items={receivers}
                         />
-                    ) : (
-                            <RNPickerSelect
-                                useNativeAndroidPickerStyle={false}
-                                placeholder={{ label: "City" }}
-                                onValueChange={(receiver) => transferContext.selectReceiver(receiver)}
-                                items={receivers}
-                            />
-                        )
+                    </View>
                 ) : (
                         <Text>No Sender selected</Text>
                     )}
             </View>
-            <View style={styles.text}>
-                <Text style={styles.text}> 0 </Text>
-            </View>
+            {selectedCategory && selectedSubCategory && selectedReceiver ? (
+                < View style={styles.text}>
+                    <Text style={styles.text}> {addition} </Text>
+                </View>
+            ) : (
+                    <View style={styles.text}>
+                        <Text style={styles.text}> 0 </Text>
+                    </View>
+                )
+            }
         </View >
     );
 }

@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
-
+import getBloodBags from './getBloodBags'
 
 const totalWidth = Dimensions.get("window").width;
 
@@ -11,6 +11,27 @@ const widthContainer = totalWidth * .90;
 
 function Sender() {
     const transferContext = useContext(TransferContext);
+    const { selectedCategory, selectedSubCategory, selectedSender, senderBloodBags, bloodBagsSent } = useContext(TransferContext);
+    let substraction, senBloodBags, moveBloodBags;
+    useEffect(() => {
+        transferContext.getSenderBloodBags(selectedCategory, selectedSubCategory, selectedSender)
+    }, [selectedSender]);
+    useEffect(() => {
+        transferContext.getSenderBloodBags(selectedCategory, selectedSubCategory, selectedSender)
+    }, [selectedCategory]);
+    useEffect(() => {
+        transferContext.getSenderBloodBags(selectedCategory, selectedSubCategory, selectedSender)
+    }, [selectedSubCategory]);
+    useEffect(() => {
+        senBloodBags = senderBloodBags
+        moveBloodBags = bloodBagsSent
+        substraction = senBloodBags - moveBloodBags;
+    }, [bloodBagsSent]);
+
+    senBloodBags = senderBloodBags
+    moveBloodBags = bloodBagsSent
+    substraction = senBloodBags - moveBloodBags;
+
     return (
         <View style={styles.container}>
             <Text>From</Text>
@@ -27,10 +48,18 @@ function Sender() {
                     ]}
                 />
             </View>
-            <View style={styles.text}>
-                <Text style={styles.text}> 0 </Text>
-            </View>
-        </View>
+            {/* bloodBagsReceived = getBloodBags(selectedCategory, selectedSubCategory, selectedSender) */}
+            {selectedCategory && selectedSubCategory && selectedSender ? (
+                < View style={styles.text}>
+                    <Text style={styles.text}> {substraction} </Text>
+                </View>
+            ) : (
+                    <View style={styles.text}>
+                        <Text style={styles.text}> 0 </Text>
+                    </View>
+                )
+            }
+        </View >
     );
 }
 

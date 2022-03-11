@@ -29,6 +29,21 @@ export default (state, action) => {
                 ...state,
                 selectedSender: payload,
             };
+        case GET_SENDER_BLOODBAGS:
+            return {
+                ...state,
+                senderBloodBags: payload,
+            };
+        case GET_RECEIVER_BLOODBAGS:
+            return {
+                ...state,
+                receiverBloodBags: payload,
+            };
+        case GET_BLOODBAGS_SENT:
+            return {
+                ...state,
+                bloodBagsSent: payload,
+            };
         default:
             return state;
     }
