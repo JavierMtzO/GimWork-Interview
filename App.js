@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Button, Text, View, Dimensions } from 'react-native';
+
+import TransferState from "./context/Transfer/TransferState";
+
 import Groups from './components/Groups'
 import Sender from './components/Sender'
 import Receiver from './components/Receiver'
@@ -10,18 +13,19 @@ const totalHeight = Dimensions.get("window").height;
 const totalWidth = Dimensions.get("window").width;
 
 export default function App() {
-
   return (
-    <View style={styles.container}>
-      <Groups />
-      <Sender />
-      <Percentage />
-      <Receiver />
-      <Button
-        title="Transfer"
-      />
-      <StatusBar style="auto" />
-    </View>
+    <TransferState>
+      <View style={styles.container}>
+        <Groups />
+        <Sender />
+        <Percentage />
+        <Receiver />
+        <Button
+          title="Transfer"
+        />
+        <StatusBar style="auto" />
+      </View>
+    </TransferState>
   );
 }
 

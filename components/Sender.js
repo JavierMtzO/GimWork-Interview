@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
+import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
+
 
 const totalWidth = Dimensions.get("window").width;
 
@@ -8,6 +10,7 @@ const widthWindow = totalWidth / 3;
 const widthContainer = totalWidth * .90;
 
 function Sender() {
+    const transferContext = useContext(TransferContext);
     return (
         <View style={styles.container}>
             <Text>From</Text>
@@ -15,7 +18,7 @@ function Sender() {
                 <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{ label: "City" }}
-                    onValueChange={(value) => console.log(value)}
+                    onValueChange={(sender) => transferContext.selectSender(sender)}
                     items={[
                         { label: "Paris", value: "Paris" },
                         { label: "Marseille", value: "Marseille" },

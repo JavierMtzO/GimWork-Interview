@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
+import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
 
@@ -6,13 +7,14 @@ const totalWidth = Dimensions.get("window").width;
 const widthWindow = totalWidth / 3;
 
 function Groups() {
+    const transferContext = useContext(TransferContext);
     return (
         <View style={styles.container}>
             <View style={styles.select}>
                 <RNPickerSelect
                     useNativeAndroidPickerStyle={false}
                     placeholder={{ label: "Category" }}
-                    onValueChange={(category) => console.log(category)}
+                    onValueChange={(category) => transferContext.selectCategory(category)}
                     items={[
                         { label: "A", value: "A" },
                         { label: "B", value: "B" },
@@ -24,7 +26,7 @@ function Groups() {
             <View style={styles.select}>
                 <RNPickerSelect
                     placeholder={{ label: "Subcategory" }}
-                    onValueChange={(subcategory) => console.log(subcategory)}
+                    onValueChange={(subcategory) => transferContext.selectSubCategory(subcategory)}
                     items={[
                         { label: "+", value: "plus" },
                         { label: "-", value: "minus" },

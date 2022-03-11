@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
+import getCities from './getCities'
 
 const totalWidth = Dimensions.get("window").width;
 
@@ -8,26 +10,39 @@ const widthWindow = totalWidth / 3;
 const widthContainer = totalWidth * .90;
 
 function Receiver() {
+    const transferContext = useContext(TransferContext);
+    const { selectedSender, selectedReceiver } = useContext(TransferContext);
+    let receivers = getCities(transferContext.selectedSender);
+
     return (
-        <View style={styles.container}>
+
+        < View style={styles.container} >
             <Text>To</Text>
             <View style={styles.select}>
-                <RNPickerSelect
-                    useNativeAndroidPickerStyle={false}
-                    placeholder={{ label: "City" }}
-                    onValueChange={(value) => console.log(value)}
-                    items={[
-                        { label: "Paris", value: "Paris" },
-                        { label: "Marseille", value: "Marseille" },
-                        { label: "Nice", value: "Nice" },
-                        { label: "Lille", value: "Lille" },
-                    ]}
-                />
+                {selectedSender ? (
+                    selectedReceiver === null ? (
+                        <RNPickerSelect
+                            useNativeAndroidPickerStyle={false}
+                            placeholder={{ label: "City" }}
+                            onValueChange={(receiver) => transferContext.selectReceiver(receiver)}
+                            items={receivers}
+                        />
+                    ) : (
+                            <RNPickerSelect
+                                useNativeAndroidPickerStyle={false}
+                                placeholder={{ label: "City" }}
+                                onValueChange={(receiver) => transferContext.selectReceiver(receiver)}
+                                items={receivers}
+                            />
+                        )
+                ) : (
+                        <Text>No Sender selected</Text>
+                    )}
             </View>
             <View style={styles.text}>
                 <Text style={styles.text}> 0 </Text>
             </View>
-        </View>
+        </View >
     );
 }
 
