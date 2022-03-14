@@ -9,6 +9,7 @@ React native mobile app for a French blood company.
  ```
  git clone https://github.com/JavierMtzO/GimWork-Interview.git
  cd GimWork-Interview/
+ npm install
  npm start
  ```
  Then read the QR code with your cellphone
