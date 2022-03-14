@@ -1,3 +1,4 @@
+export const GET_DATA = "GET_DATA";
 export const SELECT_CATEGORY = "SELECT_CATEGORY";
 export const SELECT_SUBCATEGORY = "SELECT_SUBCATEGORY";
 export const SELECT_SENDER = "SELECT_SENDER";

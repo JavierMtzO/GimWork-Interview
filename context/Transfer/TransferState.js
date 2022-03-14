@@ -4,7 +4,7 @@ import axios from "axios";
 import TransferContext from "./TransferContext";
 import TransferReducer from "./TransferReducer";
 
-import { SELECT_CATEGORY, SELECT_SUBCATEGORY, SELECT_SENDER, GET_SENDER_BLOODBAGS, SELECT_RECEIVER, GET_RECEIVER_BLOODBAGS, GET_BLOODBAGS_SENT, GET_TRANSFER_STATUS, MAKE_TRANSFER, SET_SENDER_NULL } from "../types"
+import { GET_DATA, SELECT_CATEGORY, SELECT_SUBCATEGORY, SELECT_SENDER, GET_SENDER_BLOODBAGS, SELECT_RECEIVER, GET_RECEIVER_BLOODBAGS, GET_BLOODBAGS_SENT, GET_TRANSFER_STATUS, MAKE_TRANSFER, SET_SENDER_NULL } from "../types"
 
 
 const TransferState = (props) => {
@@ -68,20 +68,26 @@ const TransferState = (props) => {
 
     const [state, dispatch] = useReducer(TransferReducer, initialState);
 
+    const getData = async () => {
+        try {
+            const res = await axios.get("http://localhost:9001/bloodbags");
+            console.log(res);
+            const data = res;
+            dispatch({ type: GET_DATA, payload: data });
+        } catch (error) {
+            console.error("Error en la aplicación");
+        }
+    };
+
     const selectCategory = (category) => {
-        console.log("Category = " + category);
         dispatch({ type: SELECT_CATEGORY, payload: category });
     }
     const selectSubCategory = (subcategory) => {
-        console.log("SubCategory = " + subcategory);
         dispatch({ type: SELECT_SUBCATEGORY, payload: subcategory });
     }
     const selectSender = (sender) => {
-        console.log("Sender = " + sender);
         dispatch({ type: SELECT_SENDER, payload: sender });
         if (state.selectedReceiver != null && state.selectedReceiver == sender) {
-            console.log("Receiver = " + null);
-            console.log("Sender = " + null);
             dispatch({ type: SELECT_RECEIVER, payload: null });
             dispatch({ type: SELECT_SENDER, payload: null });
         }
@@ -89,16 +95,13 @@ const TransferState = (props) => {
     const selectReceiver = (receiver) => {
         dispatch({ type: SELECT_RECEIVER, payload: receiver });
         if (state.selectedSender == null) {
-            console.log("Receiver = " + null);
             dispatch({ type: SELECT_RECEIVER, payload: null });
         }
         if (receiver != undefined) {
-            console.log("Receiver = " + receiver);
             dispatch({ type: SELECT_RECEIVER, payload: receiver });
         }
     }
     const setSenderNull = () => {
-        console.log("Sender = " + null);
         dispatch({ type: SET_SENDER_NULL, payload: null });
     }
 
@@ -127,8 +130,6 @@ const TransferState = (props) => {
             if (subcategory == 'plus') { number = state.bloodBags[index].abplus }
             if (subcategory == 'minus') { number = state.bloodBags[index].abminus }
         }
-        console.log("get sender bloodbags")
-        console.log(number)
         dispatch({ type: GET_SENDER_BLOODBAGS, payload: number });
     }
 
@@ -157,14 +158,24 @@ const TransferState = (props) => {
             if (subcategory == 'plus') { numberReceiver = state.bloodBags[indexReceiver].abplus }
             if (subcategory == 'minus') { numberReceiver = state.bloodBags[indexReceiver].abminus }
         }
-        console.log("get receiver bloodbags")
-        console.log(numberReceiver)
         dispatch({ type: GET_RECEIVER_BLOODBAGS, payload: numberReceiver });
     }
 
     const sendBloodBags = (bloodBags) => {
-        console.log("Bloodbags = " + bloodBags);
         dispatch({ type: GET_BLOODBAGS_SENT, payload: bloodBags });
+    }
+
+    const getTransferStatus = () => {
+        if (state.category !== null && state.subcategory !== null && state.selectedSender !== null && state.selectedReceiver !== null && state.bloodBagsSent >= 1) {
+            dispatch({ type: GET_TRANSFER_STATUS, payload: true });
+        } else {
+            dispatch({ type: GET_TRANSFER_STATUS, payload: false });
+        }
+    }
+
+    const makeTransfer = () => {
+        console.log("Transfer Made!!!!");
+        dispatch({ type: MAKE_TRANSFER, payload: true });
     }
 
     return (
@@ -180,6 +191,7 @@ const TransferState = (props) => {
                 bloodBagsSent: state.bloodBagsSent,
                 transferIsReady: state.transferIsReady,
                 transferMade: state.transferMade,
+                getData,
                 selectCategory,
                 selectSubCategory,
                 selectSender,
@@ -187,7 +199,9 @@ const TransferState = (props) => {
                 setSenderNull,
                 getSenderBloodBags,
                 getReceiverBloodBags,
-                sendBloodBags
+                sendBloodBags,
+                getTransferStatus,
+                makeTransfer
             }}
         >
             {props.children}

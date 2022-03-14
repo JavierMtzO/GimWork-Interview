@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
-import getCities from './getCities'
+import getCities from './auxFunctions/getCities'
 
 const totalWidth = Dimensions.get("window").width;
 

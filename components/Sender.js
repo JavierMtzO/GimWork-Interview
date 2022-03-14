@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react'
 import TransferContext from "../context/Transfer/TransferContext";
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
-import getBloodBags from './getBloodBags'
 
 const totalWidth = Dimensions.get("window").width;
 

@@ -1,9 +1,14 @@
-import { SELECT_CATEGORY, SELECT_SUBCATEGORY, SELECT_SENDER, GET_SENDER_BLOODBAGS, SELECT_RECEIVER, GET_RECEIVER_BLOODBAGS, GET_BLOODBAGS_SENT, GET_TRANSFER_STATUS, MAKE_TRANSFER, SET_SENDER_NULL } from "../types";
+import { GET_DATA, SELECT_CATEGORY, SELECT_SUBCATEGORY, SELECT_SENDER, GET_SENDER_BLOODBAGS, SELECT_RECEIVER, GET_RECEIVER_BLOODBAGS, GET_BLOODBAGS_SENT, GET_TRANSFER_STATUS, MAKE_TRANSFER, SET_SENDER_NULL } from "../types";
 
 export default (state, action) => {
     const { payload, type } = action;
 
     switch (type) {
+        case GET_DATA:
+            return {
+                ...state,
+                bloodBags: payload,
+            };
         case SELECT_CATEGORY:
             return {
                 ...state,
@@ -43,6 +48,16 @@ export default (state, action) => {
             return {
                 ...state,
                 bloodBagsSent: payload,
+            };
+        case GET_TRANSFER_STATUS:
+            return {
+                ...state,
+                transferIsReady: payload,
+            };
+        case MAKE_TRANSFER:
+            return {
+                ...state,
+                transferMade: payload,
             };
         default:
             return state;
